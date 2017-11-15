@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">GoCidade</string>
+    <string name="facebook_app_id">2032683646984404</string>
+    <string name="fb_login_protocol_scheme">fb2032683646984404</string>
+    <string name="login_email">Email</string>
+    <string name="login_senha">Senha</string>
+    <string name="btn_login">Login</string>
+
 </resources>

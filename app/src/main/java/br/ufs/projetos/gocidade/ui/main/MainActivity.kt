@@ -1,7 +1,8 @@
-package br.ufs.projetos.gocidade
+package br.ufs.projetos.gocidade.ui.main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import br.ufs.projetos.gocidade.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -26,16 +27,14 @@ class MainActivity : AppCompatActivity() {
                     callback.addMarker(MarkerOptions()
                             .position(mOrigem)
                             .title("Av. Paulista")
-                            .snippet("São Paulo")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_directions_car_24dp)))
+                            .snippet("São Paulo"))
 
             val auxPlace = LatLng(-23.88888, -46.77777)
 
             callback.addMarker(MarkerOptions()
                     .position(auxPlace)
                     .title("Av. Paulista")
-                    .snippet("São Paulo")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_24dp)))
+                    .snippet("São Paulo"))
 
 
             callback.uiSettings.isMapToolbarEnabled = false
