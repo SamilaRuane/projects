@@ -19,14 +19,15 @@ class AppApiHelper : ApiHelper {
 
     val mAuth = FirebaseAuth.getInstance()
 
-    override fun signInWithFacebook(callbackManager: CallbackManager) : Observable<Boolean>{
-        var success = false
+    override fun signInWithFacebook(callbackManager: CallbackManager, listener : DataManager.DataResult) {
+
 
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
 
             override fun onError(error: FacebookException?) {
 
                 Log.i ("GCityLog", "Error" )
+                listener.onResult(false, error.toString())
             }
 
             override fun onCancel() {
@@ -35,25 +36,28 @@ class AppApiHelper : ApiHelper {
 
             override fun onSuccess(result: LoginResult?) {
                 Log.i ("GCityLog", "Success ${result.toString()}" )
-                success = true
+                listener.onResult(true, result.toString())
             }
         })
 
-        return Observable.just(success)
+
 
     }
 
-    override fun signInWithEmailAndPassword(email: String, password: String) : Observable<Boolean> {
-        var success : Boolean = false
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task: Task<AuthResult> ->   success = task.isSuccessful
+    override fun signInWithEmailAndPassword(email: String, password: String, result : DataManager.DataResult) {
+       mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+           task ->
+           if (task.isSuccessful) result.onResult(true, task.toString())
+           else result.onResult(false, task.toString())
+       }
+    }
+
+    override fun signUpWithEmailAndPassword(email: String, password: String, result : DataManager.DataResult) {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            task ->
+            if (task.isSuccessful) result.onResult(true, task.toString())
+            else result.onResult(false, task.toString())
         }
-        return Observable.just(success)
-    }
-
-    override fun signUpWithEmailAndPassword(email: String, password: String) : Observable<Boolean> {
-        var success : Boolean = false
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task: Task<AuthResult> ->   success = task.isSuccessful }
-        return Observable.just(success)
     }
 
 

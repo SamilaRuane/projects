@@ -61,6 +61,7 @@
         android:layout_marginStart="8dp"
         android:background="@color/colorPrimaryDark"
         android:contentDescription="@string/btn_signup"
+        android:text="@string/btn_signup"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

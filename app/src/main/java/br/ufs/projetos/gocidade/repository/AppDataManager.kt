@@ -10,19 +10,21 @@ class AppDataManager : DataManager {
 
     val mApiHelper = AppApiHelper ()
 
-    override fun signInWithFacebook(callbackManager: CallbackManager) : Observable <Boolean> {
-        return mApiHelper.signInWithFacebook(callbackManager)
+    override fun signInWithFacebook(callbackManager: CallbackManager, listener : DataManager.DataResult)  {
+         mApiHelper.signInWithFacebook(callbackManager, listener)
     }
 
-    override fun signInWithEmailAndPassword(email: String, password: String) : Observable<Boolean> {
-        return mApiHelper.signInWithEmailAndPassword(email, password)
+    override fun signInWithEmailAndPassword(email: String, password: String, result : DataManager.DataResult)  {
+        mApiHelper.signInWithEmailAndPassword(email, password, result)
     }
 
-    override fun signUpWithEmailAndPassword(email: String, password: String) : Observable <Boolean> {
-        return mApiHelper.signUpWithEmailAndPassword(email, password)
+    override fun signUpWithEmailAndPassword(email: String, password: String, result : DataManager.DataResult)  {
+         mApiHelper.signUpWithEmailAndPassword(email, password, result)
     }
 
     override fun isSigned(): Boolean {
         return mApiHelper.isSigned()
     }
+
+
 }

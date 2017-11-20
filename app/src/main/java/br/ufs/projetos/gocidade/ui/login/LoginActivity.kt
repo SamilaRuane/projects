@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import br.ufs.projetos.gocidade.R
 import br.ufs.projetos.gocidade.ui.main.MainActivity
+import br.ufs.projetos.gocidade.ui.main.MapActivity
 import com.facebook.CallbackManager
 import com.facebook.FacebookSdk
 import kotlinx.android.synthetic.main.activity_login.*
@@ -58,15 +59,15 @@ class LoginActivity : AppCompatActivity(), LoginContract.View{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onSuccess() {
+    override fun onSuccess(message : String) {
         Toast.makeText(this, "Login Realizado com Sucesso!!!", Toast.LENGTH_SHORT).show ()
     }
 
-    override fun onError() {
-        Toast.makeText(this, "Ocorreu um erro. Tente Novamente!", Toast.LENGTH_SHORT).show ()
+    override fun onError(message : String) {
+        Toast.makeText(this, "Ocorreu um erro. Tente Novamente! $message", Toast.LENGTH_SHORT).show ()
     }
 
-    override fun redirectTo(destinationClass: String) {
-        startActivity(Intent(this, Class.forName(destinationClass) :: class.java))
+    override fun redirectTo(destinationClass: Class<*>) {
+        startActivity(Intent(this, destinationClass))
     }
 }

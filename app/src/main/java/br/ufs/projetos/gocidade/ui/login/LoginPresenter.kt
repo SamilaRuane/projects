@@ -1,10 +1,10 @@
 package br.ufs.projetos.gocidade.ui.login
 
-import android.util.Log
 import br.ufs.projetos.gocidade.repository.AppDataManager
 import br.ufs.projetos.gocidade.repository.DataManager
+import br.ufs.projetos.gocidade.ui.main.MainActivity
+import br.ufs.projetos.gocidade.ui.main.MapActivity
 import com.facebook.CallbackManager
-import rx.Subscriber
 
 /**
  * Created by samila on 13/11/17.
@@ -13,6 +13,10 @@ class LoginPresenter : LoginContract.Presenter {
 
     var mView : LoginContract.View
     val mDataManager : DataManager = AppDataManager ()
+    lateinit var listener : DataManager.DataResult
+
+
+
     val TAG =  "GCity"
 
     constructor(mView: LoginContract.View) {
@@ -20,83 +24,52 @@ class LoginPresenter : LoginContract.Presenter {
     }
 
     override fun signUpWithEmail(email: String, password: String) {
-        val subscriber = object : Subscriber <Boolean> (){
-            override fun onError(e: Throwable?) {
-                e?.printStackTrace()
-            }
 
-            override fun onCompleted() {
-                Log.i(TAG, "onCompleted")
-            }
-
-            override fun onNext(t: Boolean?) {
-                if (t != null){
-                    if (t){
-                       mView.onSuccess()
-                    }else{
-                        mView.onError()
-                    }
+        listener = object : DataManager.DataResult {
+            override fun onResult(b: Boolean, s: String) {
+                if (b){
+                    mView.onSuccess(s)
+                    mView.redirectTo(LoginActivity :: class.java)
+                }else{
+                    mView.onError(s)
                 }
             }
         }
-
-        mDataManager.signUpWithEmailAndPassword(email, password).subscribe(subscriber)
+        mDataManager.signUpWithEmailAndPassword(email, password, listener)
     }
 
-
     override fun signInWithFacebook(callbackManager: CallbackManager) {
-
-        val subscriber = object : Subscriber <Boolean> (){
-            override fun onError(e: Throwable?) {
-                e?.printStackTrace()
-            }
-
-            override fun onCompleted() {
-                Log.i(TAG, "onCompleted")
-            }
-
-            override fun onNext(t: Boolean?) {
-                if (t != null){
-                    if (t){
-                        mView.onSuccess()
-                        mView.redirectTo("MainActivity")
-                    }else{
-                        mView.onError()
-                    }
+        listener = object : DataManager.DataResult {
+            override fun onResult(b: Boolean, s: String) {
+                if (b){
+                    mView.onSuccess(s)
+                    mView.redirectTo(MapActivity :: class.java)
+                }else{
+                    mView.onError(s)
                 }
             }
         }
-        mDataManager.signInWithFacebook(callbackManager).subscribe(subscriber)
+        mDataManager.signInWithFacebook(callbackManager, listener)
+
     }
 
     override fun signInWithEmail(email: String, password: String) {
-        val subscriber = object : Subscriber <Boolean> (){
-            override fun onError(e: Throwable?) {
-                e?.printStackTrace()
-            }
-
-            override fun onCompleted() {
-                Log.i(TAG, "onCompleted")
-            }
-
-            override fun onNext(t: Boolean?) {
-                Log.i(TAG, "onCompleted $t")
-                if (t != null){
-                    if (t){
-                        mView.onSuccess()
-                    }else{
-                        mView.onError()
-                    }
+        listener = object : DataManager.DataResult {
+            override fun onResult(b: Boolean, s: String) {
+                if (b){
+                    mView.onSuccess(s)
+                    mView.redirectTo(MainActivity :: class.java)
+                }else{
+                    mView.onError(s)
                 }
             }
         }
-
-        mDataManager.signInWithEmailAndPassword(email, password).subscribe(subscriber)
+       mDataManager.signInWithEmailAndPassword(email, password, listener)
     }
 
     override fun isSigned() {
         if (mDataManager.isSigned()){
-            mView.redirectTo("MainActivity")
+            mView.redirectTo(MapActivity :: class.java)
         }
     }
 }

@@ -1,5 +1,7 @@
 package br.ufs.projetos.gocidade.ui.login
 
+import android.app.Activity
+import android.support.v7.app.AppCompatActivity
 import com.facebook.CallbackManager
 import java.util.*
 
@@ -10,9 +12,9 @@ interface LoginContract {
 
     interface View {
        fun showProgressBar (active : Boolean)
-        fun onSuccess ()
-        fun onError ()
-        fun redirectTo(destinationClass : String)
+        fun onSuccess ( message : String )
+        fun onError (message : String)
+        fun redirectTo(destinationClass : Class<*>)
     }
 
     interface Presenter {

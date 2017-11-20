@@ -38,15 +38,15 @@ class SignUpActivity : AppCompatActivity(), LoginContract.View {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onSuccess() {
+    override fun onSuccess(message : String) {
         Toast.makeText(this, "Usuários Cadastrado com Sucesso!!!", Toast.LENGTH_SHORT).show ()
     }
 
-    override fun onError() {
-        Toast.makeText(this, "Ocorreu um erro. Tente Novamente", Toast.LENGTH_SHORT).show ()
+    override fun onError(message : String) {
+        Toast.makeText(this, "Ocorreu um erro. Tente Novamente $message", Toast.LENGTH_SHORT).show ()
     }
 
-    override fun redirectTo(destinationClass: String) {
-        startActivity(Intent(this, Class.forName(destinationClass) :: class.java))
+    override fun redirectTo(destinationClass: Class<*>) {
+        startActivity(Intent(this, destinationClass))
     }
 }

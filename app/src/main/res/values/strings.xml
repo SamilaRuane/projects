@@ -7,5 +7,12 @@
     <string name="btn_login">Login</string>
     <string name="txt_signup">Não tem conta? Cadastre-se!</string>
     <string name="btn_signup">Cadastrar</string>
+    <string name="msg_route">Traçando rota...</string>
+    <string name="origin">Origem</string>
+    <string name="msg_progress">Carregando...</string>
+    <string name="error_gps">É necessário habilitar a configuração de localização para utilizar o aplicativo</string>
+    <string name="address_list_title">Selecione o destino</string>
+    <string name="local_error">Você deve Habilitar as permissões para utilizar o aplicativo!</string>
+    <string name="search_title">Digite seu destino</string>
 
 </resources>
