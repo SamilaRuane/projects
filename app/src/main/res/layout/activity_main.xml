@@ -8,7 +8,10 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp">
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -64,9 +67,38 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/main_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-    <include layout="@layout/layout_progress" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_take_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:clickable="true"
+        android:contentDescription="Edit image icon"
+        android:padding="4dp"
+        android:src="@drawable/ic_camera_alt_white_24dp"
+        app:elevation="5dp"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="446dp" />
+
+    <FrameLayout
+        android:id = "@+id/camera_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+    </FrameLayout>
+
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/layout_progress" />
 
 
 </android.support.constraint.ConstraintLayout>

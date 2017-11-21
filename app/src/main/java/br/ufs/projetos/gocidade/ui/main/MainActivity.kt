@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentActivity
 import br.ufs.projetos.gocidade.R
+import br.ufs.projetos.gocidade.ui.post.PostActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
@@ -61,6 +62,8 @@ class MainActivity : AppCompatActivity(),
         main_pager.adapter = pageAdapter
         main_pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener (main_tabs))
         main_tabs.setOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(main_pager))
+
+        btn_take_picture.setOnClickListener { startActivity(Intent (applicationContext, PostActivity :: class.java)) }
     }
 
     override fun onStart() {

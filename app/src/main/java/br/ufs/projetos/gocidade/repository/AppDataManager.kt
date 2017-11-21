@@ -1,5 +1,7 @@
 package br.ufs.projetos.gocidade.repository
 
+import br.ufs.projetos.gocidade.repository.model.AppDbHelper
+import br.ufs.projetos.gocidade.repository.model.Post
 import com.facebook.CallbackManager
 import rx.Observable
 
@@ -9,6 +11,7 @@ import rx.Observable
 class AppDataManager : DataManager {
 
     val mApiHelper = AppApiHelper ()
+    val mDbHelper = AppDbHelper ()
 
     override fun signInWithFacebook(callbackManager: CallbackManager, listener : DataManager.DataResult)  {
          mApiHelper.signInWithFacebook(callbackManager, listener)
@@ -26,5 +29,7 @@ class AppDataManager : DataManager {
         return mApiHelper.isSigned()
     }
 
-
+    override fun newPost(post : Post) {
+        mDbHelper.newPost(post)
+    }
 }

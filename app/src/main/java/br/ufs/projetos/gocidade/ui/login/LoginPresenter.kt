@@ -43,7 +43,7 @@ class LoginPresenter : LoginContract.Presenter {
             override fun onResult(b: Boolean, s: String) {
                 if (b){
                     mView.onSuccess(s)
-                    mView.redirectTo(MapActivity :: class.java)
+                    mView.redirectTo(MainActivity :: class.java)
                 }else{
                     mView.onError(s)
                 }
@@ -69,7 +69,7 @@ class LoginPresenter : LoginContract.Presenter {
 
     override fun isSigned() {
         if (mDataManager.isSigned()){
-            mView.redirectTo(MapActivity :: class.java)
+            mView.redirectTo(MainActivity :: class.java)
         }
     }
 }

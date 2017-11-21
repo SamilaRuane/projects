@@ -13,11 +13,14 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,10 +62,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufs.projetos.gocidade.R;
-import br.ufs.projetos.gocidade.util.Constants;
+import br.ufs.projetos.gocidade.util.ConfigConstants;
 
 
-public class MapActivity extends AppCompatActivity implements  OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener, SearchView.OnQueryTextListener {
+public class MapActivity extends AppCompatActivity implements  OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, GoogleMap.OnMarkerClickListener,
+        SearchView.OnQueryTextListener, View.OnClickListener {
 
 
     private LatLng mOrigem;
@@ -86,6 +93,8 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
     private Marker mCurrentLocationMarker;
     private Toolbar toolbar;
+    private FloatingActionButton floatBtn;
+    private FrameLayout mFrameLayout;
 
 
 
@@ -119,6 +128,9 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         mLoaderManager = getSupportLoaderManager();
         mProgressText = (TextView) findViewById(R.id.search_spot_progress);
         mProgressLayout = (LinearLayout) findViewById(R.id.search_spot_llProgress);
+        mFrameLayout = findViewById(R.id.camera_content);
+        TabLayout tabLayout = findViewById(R.id.main_tabs);
+        ViewPager viewPager = findViewById(R.id.main_pager);
         mShouldShowDialog = savedInstanceState == null;
         mHandler = new Handler();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -130,15 +142,33 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 //        mPlaceEditor = (EditText) findViewById(R.id.search_spot_edit_place);
 //        mSearchButton = (ImageButton) findViewById(R.id.search_spot_img_search);
 //        mSearchButton.setOnClickListener(this);
+
+        floatBtn =  findViewById(R.id.btn_take_picture);
+
+        floatBtn.setOnClickListener(this);
+
+        // ******** Tabs config *****
+        // ---- add tabs
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map_white_24dp));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_person_white_24dp));
+        // ----- add Fragments
+        TabsPagerAdapter pageAdapter  = new TabsPagerAdapter(getSupportFragmentManager());
+        // pageAdapter.addFragment(fragment)
+        // pageAdapter.addFragment(profileFragment)
+
+        viewPager.setAdapter(pageAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener (tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
         }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-//        outState.putBoolean(Constants.EXTRA_DIALOG, mShouldShowDialog);
-//        outState.putParcelable(Constants.EXTRA_ORIG, mOrigem);
-//        outState.putParcelable(Constants.EXTRA_DEST, mDestination);
-//        outState.putParcelableArrayList(Constants.EXTRA_ROUTE, mRoute);
+//        outState.putBoolean(ConfigConstants.EXTRA_DIALOG, mShouldShowDialog);
+//        outState.putParcelable(ConfigConstants.EXTRA_ORIG, mOrigem);
+//        outState.putParcelable(ConfigConstants.EXTRA_DEST, mDestination);
+//        outState.putParcelableArrayList(ConfigConstants.EXTRA_ROUTE, mRoute);
     }
 
     @Override
@@ -153,10 +183,10 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-//        mShouldShowDialog = savedInstanceState.getBoolean(Constants.EXTRA_DIALOG, true);
-//        mOrigem = savedInstanceState.getParcelable(Constants.EXTRA_ORIG);
-//        mDestination = savedInstanceState.getParcelable(Constants.EXTRA_DEST);
-//        mRoute = savedInstanceState.getParcelableArrayList(Constants.EXTRA_ROUTE);
+//        mShouldShowDialog = savedInstanceState.getBoolean(ConfigConstants.EXTRA_DIALOG, true);
+//        mOrigem = savedInstanceState.getParcelable(ConfigConstants.EXTRA_ORIG);
+//        mDestination = savedInstanceState.getParcelable(ConfigConstants.EXTRA_DEST);
+//        mRoute = savedInstanceState.getParcelableArrayList(ConfigConstants.EXTRA_ROUTE);
 
     }
 
@@ -294,7 +324,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
     private void loadRoute() {
         mRoute = null;
-        mLoaderManager.initLoader(Constants.ROUTE_LOADER, null, mRouteCallback);
+        mLoaderManager.initLoader(ConfigConstants.ROUTE_LOADER, null, mRouteCallback);
         Log.i("SRBS", "Chamou o LoaderRoute");
         showProgress(getString(R.string.msg_route));
     }
@@ -317,7 +347,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
                     Log.i("SRBS", "OnLoadFinished: Carregou a rota, size =  " + data.size());
                     mFragment.getMapAsync(MapActivity.this);
                     hideProgress();
-                   mLoaderManager.destroyLoader(Constants.ROUTE_LOADER);
+                   mLoaderManager.destroyLoader(ConfigConstants.ROUTE_LOADER);
 
                 }
             });
@@ -334,11 +364,11 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("SRBS", "onConnected de Search");
         checkGPSStatus();
-        if (isLoading(Constants.ADDRESS_LOADER) && mDestination == null) {
-            mLoaderManager.initLoader(Constants.ADDRESS_LOADER, null, mSearchPlaceCallback);
+        if (isLoading(ConfigConstants.ADDRESS_LOADER) && mDestination == null) {
+            mLoaderManager.initLoader(ConfigConstants.ADDRESS_LOADER, null, mSearchPlaceCallback);
             showProgress(getString(R.string.msg_progress));
-        } else if ((isLoading((Constants.ROUTE_LOADER)) && mRoute == null)) {
-            mLoaderManager.initLoader(Constants.ROUTE_LOADER, null, mRouteCallback);
+        } else if ((isLoading((ConfigConstants.ROUTE_LOADER)) && mRoute == null)) {
+            mLoaderManager.initLoader(ConfigConstants.ROUTE_LOADER, null, mRouteCallback);
             Log.i("SRBS", "Deu init no Route");
             showProgress(getString(R.string.msg_route));
         }
@@ -355,7 +385,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         Log.i("SRBS", "onConnectionFailed");
         if (connectionResult.hasResolution()) {
             try {
-                connectionResult.startResolutionForResult(this, Constants.REQUEST_PLAY_SERVICES_ERROR);
+                connectionResult.startResolutionForResult(this, ConfigConstants.REQUEST_PLAY_SERVICES_ERROR);
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
@@ -383,9 +413,9 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("SRBS", "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_PLAY_SERVICES_ERROR && resultCode == RESULT_OK) {
+        if (requestCode == ConfigConstants.REQUEST_PLAY_SERVICES_ERROR && resultCode == RESULT_OK) {
             mGoogleApiClient.connect();
-        } else if (requestCode == Constants.REQUEST_CHECK_GPS) {
+        } else if (requestCode == ConfigConstants.REQUEST_CHECK_GPS) {
             if (resultCode == RESULT_OK) {
                 mAttempts = 0;
                 mHandler.removeCallbacksAndMessages(null);
@@ -461,7 +491,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         if (mShouldShowDialog) {
                             try {
-                                status.startResolutionForResult(MapActivity.this, Constants.REQUEST_CHECK_GPS);
+                                status.startResolutionForResult(MapActivity.this, ConfigConstants.REQUEST_CHECK_GPS);
                                 mShouldShowDialog = false;
                             } catch (IntentSender.SendIntentException e) {
                                 e.printStackTrace();
@@ -483,7 +513,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
 
-        mLoaderManager.restartLoader(Constants.ADDRESS_LOADER, null, mSearchPlaceCallback);
+        mLoaderManager.restartLoader(ConfigConstants.ADDRESS_LOADER, null, mSearchPlaceCallback);
         showProgress(getString(R.string.msg_progress));
     }
 
@@ -721,6 +751,15 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_take_picture){
+            CamPhotoFragment fragment = new CamPhotoFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.camera_content, fragment, "FragmentPhoto");
+            mFrameLayout.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -4,7 +4,7 @@ package br.ufs.projetos.gocidade.util;
  * Created by samila on 19/11/17.
  */
 
-public class Constants {
+public class ConfigConstants {
     public static final int REQUEST_PLAY_SERVICES_ERROR = 1;
     public static final int REQUEST_CHECK_GPS = 2;
     public static final int ADDRESS_LOADER = 1;
